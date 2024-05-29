@@ -6,7 +6,6 @@ SECRET_KEY = 'django-insecure-c9mf+qm+en)33e#1--kp7yd^=7mi9n$sjm=mb@^i#4bzm6(^yd
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = "hodimlar.User"
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -88,3 +87,4 @@ MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = ''
+AUTH_USER_MODEL = "hodimlar.User"

@@ -28,18 +28,19 @@ class User(AbstractUser):
     role = models.CharField(max_length=150)
     status = models.CharField(max_length=50, default='Active')
     phone = models.CharField(max_length=100)
+    avatar = models.ImageField(upload_to='images/', blank=True)
     blog = models.CharField(max_length=200)
     department = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = CustomUserManager
+    objects = CustomUserManager()
 
     def get_username(self):
         return self.username
 
     def get_full_name(self):
-        return self.first_name + self.last_name
+        return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
         return self.username
