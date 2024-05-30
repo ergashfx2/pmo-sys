@@ -14,8 +14,10 @@
       <form action="" method="post">
           {% csrf_token %}
         <div class="input-group mb-3" style="margin-top: 10%">
-          <input type="text" class="form-control" placeholder="Username">
-          <div class="input-group-append">
+            <label>
+                <input type="text" class="form-control" placeholder="Username">
+            </label>
+            <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
             </div>
