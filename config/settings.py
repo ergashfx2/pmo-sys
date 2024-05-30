@@ -85,6 +85,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
 AUTH_USER_MODEL = "hodimlar.User"

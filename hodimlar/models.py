@@ -28,9 +28,9 @@ class User(AbstractUser):
     role = models.CharField(max_length=150)
     status = models.CharField(max_length=50, default='Active')
     phone = models.CharField(max_length=100)
-    avatar = models.ImageField(upload_to='images/', blank=True)
-    blog = models.CharField(max_length=200)
-    department = models.CharField(max_length=200)
+    avatar = models.ImageField(upload_to='images/', max_length=300,blank=True)
+    blog = models.CharField(max_length=200, blank=True)
+    department = models.CharField(max_length=200,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
