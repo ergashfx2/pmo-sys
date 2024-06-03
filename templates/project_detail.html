@@ -82,14 +82,23 @@
                                                         <div class="timeline-item">
                                                             {% for task in data.tasks %}
                                                                 {% generate_random 'collapse' as random_id %}
-                                                                        <div class="progress mb-3">
-                                                                            <div class="progress-bar {% if task.task_done_percentage | to_int  == 100 %}bg-success{% elif task.task_done_percentage | to_int   < 100 and task.task_done_percentage | to_int  > 50 %}bg-warning {% else %}bg-primary{% endif %}"
-                                                                                 role="progressbar" aria-valuenow="{{ task.task_done_percentage }}"
-                                                                                 aria-valuemin="0"
-                                                                                 aria-valuemax="100" style="width: {{ task.task_done_percentage }}%">
-                                                                                {{ task.task_name }} {{ task.task_done_percentage }}%
-                                                                            </div>
-                                                                        </div>
+                                                                {% with task.task_done_percentage|to_int as percentage %}
+<div class="progress-bar d-block
+    {% if percentage == 100 %}
+        bg-success
+    {% elif percentage < 100 and percentage >= 50 %}
+        bg-warning
+    {% elif percentage < 50 and percentage >= 0 %}
+        bg-danger
+    {% endif %}"
+    role="progressbar"
+    aria-valuenow="{{ percentage }}"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    style="width: {{ percentage }}%">
+    {{ task.task_name }} {{ percentage }}%
+</div>
+{% endwith %}
                                                                 <div class="collapse" id="{{ random_id }}">
                                                                     <div class="card card-body">
                                                                         <div class="row">

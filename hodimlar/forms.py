@@ -12,33 +12,51 @@ class CreateUserForm(forms.ModelForm):
     last_name = forms.CharField(max_length=150, label='Familiya kiriting')
     phone = forms.CharField(max_length=150, label='Telefon raqam kiriting')
     email = forms.EmailField(label='Email kiriting')
-    role = forms.ChoiceField(label="Foydalanuvchi ro'lini tanlang",
-                             choices={'Admin': 'Admin', 'Loyiha menejeri': "Loyiha menejeri",
-                                      'Loyiha egasi': "Loyiha egasi",
-                                      'Loyiha kuratori': 'Loyiha kuratori', 'O)ddiy': "Oddiy foydalanuvchi"},
-                             widget=forms.Select(attrs={'class': 'form-control'}))
+    role = forms.ChoiceField(
+        label="Foydalanuvchi ro'lini tanlang",
+        choices={
+            'Admin': 'Admin',
+            'Loyiha menejeri': "Loyiha menejeri",
+            'Loyiha egasi': "Loyiha egasi",
+            'Loyiha kuratori': 'Loyiha kuratori',
+            'O)ddiy': "Oddiy foydalanuvchi"
+        },
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     position = forms.CharField(label='Lavozimini tanlang', max_length=150)
-    departments = {}
-    blogs = {}
-    for blok in Blog.objects.all():
-        blogs[blok] = blok.blog_name
-    for department in Department.objects.all():
-        departments[department] = department.department_name
-    blok = forms.ChoiceField(label='Blokni tanlang', choices=blogs,
-                             widget=forms.Select(attrs={'class': 'form-control'}))
-    department = forms.ChoiceField(label='Departamentni tanlang', choices=departments,
-                                   widget=forms.Select(attrs={'class': 'form-control'}))
-    image = forms.ImageField(label="Rasm yuklang", max_length=150)
-    password = forms.CharField(label='Parolni kiriting', max_length=150, widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'name': 'password', 'type': 'password'}))
+    blogs = {blok.id: blok.blog_name for blok in Blog.objects.all()}
+    departments = {department.id: department.department_name for department in Department.objects.all()}
+    blok = forms.ChoiceField(
+        label='Blokni tanlang',
+        choices=blogs.items(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    department = forms.ChoiceField(
+        label='Departamentni tanlang',
+        choices=departments.items(),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    image = forms.ImageField(label="Rasm yuklang", max_length=150, required=False)
+    password = forms.CharField(
+        label='Parolni kiriting',
+        max_length=150,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password', 'type': 'password'})
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'last_name', 'phone', 'email', 'role', 'position', 'department', 'blok',
-                  'image', 'password']
+        fields = [
+            'username', 'first_name', 'last_name', 'phone', 'email', 'role', 'position', 'department', 'blok', 'image', 'password'
+        ]
 
-    def clean(self):
-        self.password = make_password(self.password)
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.password = make_password(self.cleaned_data['password'])
+        if self.cleaned_data.get('image'):
+            user.avatar = self.cleaned_data['image']
+        if commit:
+            user.save()
+        return user
 
 
 class UserLoginForm(forms.Form):
