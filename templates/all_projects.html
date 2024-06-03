@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ <div class="col-12">
+        <div class="card shadow-2-strong"
+             style="background-color: #ffffff; height: 100dvh">
+            <div class="card-header">
+                <div class="row mt-3">
+                    <label for="inputEmail3" class="col-1 col-form-label">Tanlang</label>
+                    <div class="col-6">
+                        <select type="text" class="form-control" id="input">
+                            <option>Hech nima tanlanmagan</option>
+                            <option>Batafsil</option>
+                            <option>Bloklash</option>
+                            <option>Blokdan ochish</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-danger" style="display: inline">Go</button>
+                        <i onclick="location.href = '{% url 'hodimlar:create-user' %}'" id="add-user" class="fa-solid fa-circle-plus btn btn-outline-dark" ></i>
+                        <i class="fa-solid fa-trash-can btn btn-outline-dark"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">№</th>
+                            <th scope="col">Loyiha nomi</th>
+                            <th scope="col">Loyiha haqida</th>
+                            <th scope="col">Loyiha egasi</th>
+                            <th scope="col">Loyiha kuratori</th>
+                            <th scope="col">Loyiha budjeti</th>
+                            <th scope="col">Sarflandi</th>
+                            <th scope="col">Holati</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% with num=0 %}
+                            {% for project in projects %}
+                                <tr>
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="flexCheckDefault1"/>
+                                        </div>
+                                    </th>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a class="link-list" style="text-decoration: none;color: black"
+                                           href="{% url 'get-project' project.pk %}"> {{ project.project_name }} </a></td>
+                                    <td>{{ project.project_description }}</td>
+                                    <td>{{ project.author.get_full_name }}</td>
+                                    <td>{{ project.project_curator }}</td>
+                                    <td>{{ project.project_budget }}</td>
+                                    <td>{{ project.project_spent_money }}</td>
+                                    <td>{{ project.status }}Jarayonda</td>
+                                </tr>
+                            {% endfor %}
+                        {% endwith %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

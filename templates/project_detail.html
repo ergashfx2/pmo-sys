@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load filters %}
+{% block content %}
+    <div class="container-fluid">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        {% for pr in project %}
+                            <h1>{{ pr.project_name }}</h1>
+                        {% endfor %}
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Project Detail</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="content">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Loyiha haqida</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">Loyiha budjeti</span>
+                                            {% for ph in project %}
+                                                <span class="info-box-number text-center text-muted mb-0">{{ ph.project_budget }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">Sarflangan pul</span>
+                                            {% for ph in project %}
+                                                <span class="info-box-number text-center text-muted mb-0">{{ ph.project_spent_money }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="info-box bg-light">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-center text-muted">Tugash vaqti</span>
+                                            {% for ph in project %}
+                                                <span class="info-box-number text-center text-muted mb-0">{{ ph.project_deadline | format_date }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {% for data in datas %}
+                                                <div class="timeline">
+                                                    <div class="time-label">
+                                                        <span class="bg-red">{{ data.phase }} {{ data.phase_done_percentage }}%</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="timeline-item">
+                                                            {% for task in data.tasks %}
+                                                                {% generate_random 'collapse' as random_id %}
+                                                                        <div class="progress mb-3">
+                                                                            <div class="progress-bar {% if task.task_done_percentage == 100 %}bg-success{% elif task.task_done_percentage < 100 and task.task_done_percentage > 50 %}bg-warning {% else %}bg-primary{% endif %}"
+                                                                                 role="progressbar" aria-valuenow="{{ task.task_done_percentage }}"
+                                                                                 aria-valuemin="0"
+                                                                                 aria-valuemax="100" style="width: {{ task.task_done_percentage }}%">
+                                                                                {{ task.task_name }} {{ task.task_done_percentage }}%
+                                                                            </div>
+                                                                        </div>
+                                                                <div class="collapse" id="{{ random_id }}">
+                                                                    <div class="card card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-1">
+                                                                                <input type="checkbox">
+                                                                            </div>
+                                                                            <div class="col-10">
+                                                                                {{ task.task_name }}
+                                                                            </div>
+                                                                            <div class="col-1">
+                                                                                <p>{{ task.done_percentage }}0 %</p>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="timeline-body">
+                                                                </div>
+                                                                <div class="timeline-footer">
+                                                                    <a class="btn btn-primary btn-sm">Read more</a>
+                                                                    <a class="btn btn-danger btn-sm">Delete</a>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            {% endfor %}
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+                            {% for ph in project %}
+                                <h3 class="text-primary"><i class="fas fa-paint-brush"></i>{{ ph.project_name }} </h3>
+                                <p class="text-muted">{{ ph.project_description }}</p>
+                                <br>
+                                <div class="text-muted">
+                                    <p class="text-sm">Loyiha egasi
+                                        <b class="d-block">{{ ph.author.get_full_name }}</b>
+                                    </p>
+                                    <p class="text-sm">Loyiha kuratori
+                                        <b class="d-block">{{ ph.project_curator }}</b>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                            <h5 class="mt-5 text-muted">Loyiha fayllari</h5>
+                            <ul class="list-unstyled">
+                                {% for doc in documents %}
+                                    <li>
+                                        <a href="" class="btn-link text-secondary" download="{{ doc.document }}"><i
+                                                class="fa-solid fa-link" style="margin-right: 2%"></i>
+                                            <embed href="{{ doc.document }}">
+                                            {{ doc.document }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="text-start mt-5 mb-3">
+                                <a href="#" class="btn btn-sm btn-primary">Fayl qo'shish</a>
+                                <a href="#" class="btn btn-sm btn-danger">O'chirish</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock content %}

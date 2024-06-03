@@ -145,7 +145,7 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="{% url 'home' %}" class="brand-link">
-            <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+            <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="Logo"
                  class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">PMO system</span>
         </a>
@@ -185,8 +185,18 @@
                             </p>
                         </a>
                     </li>
+                    {% if user.role == 'Admin' %}
+                                        <li class="nav-item">
+                        <a href="{% url 'hodimlar:users' %}" class="nav-link">
+                            <i class="fa-solid fa-users" style="color: #fafafa;margin-right: 2%"></i>
+                            <p>
+                                Foydalanuvchilar
+                            </p>
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{% url 'all-projects' %}" class="nav-link">
                             <i class="fa-solid fa-file-invoice" style="color: #fafafa;margin-right: 2%"></i>
                             <p>
                                 Barcha loyihalar
@@ -240,5 +250,7 @@
 <script src="{% static 'plugins/chart.js/Chart.min.j' %}s"></script>
 <script src="{% static 'dist/js/demo.js' %}"></script>
 <script src="{% static 'dist/js/pages/dashboard3.js' %}"></script>
+<script src="{% static 'static/js/script.js' %}">
+</script>
 </body>
 </html>

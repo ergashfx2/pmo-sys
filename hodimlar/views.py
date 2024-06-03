@@ -1,10 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import UpdateView, ListView, CreateView, View
+from .forms import UpdateUserForm, CreateUserForm
+
 from .forms import UserLoginForm
+
 User = get_user_model()
+
 
 @login_required
 def profileView(request):
@@ -12,6 +20,11 @@ def profileView(request):
         user = User.objects.get(username=request.user.username)
         print(user)
         return render(request, 'profile.html', {'user': user})
+
+
+class UsersView(ListView):
+    model = User
+    template_name = 'users.html'
 
 
 def login_view(request):
@@ -25,7 +38,9 @@ def login_view(request):
         if user is None:
             try:
                 user = User.objects.filter(username=username)
-                user = authenticate(request, username=user.username, password=password)
+                username = user.values()[0]['username']
+                user = authenticate(request, username=username, password=password)
+                print(user)
             except User.DoesNotExist:
                 user = None
 
@@ -42,3 +57,25 @@ def login_view(request):
 def logoutView(request):
     logout(request)
     return redirect('hodimlar:login')
+
+
+class UserUpdateView(UpdateView, LoginRequiredMixin):
+    model = User
+    form_class = UpdateUserForm
+    template_name = 'update_user.html'
+
+    def get_success_url(self):
+        return reverse('hodimlar:profile')
+
+
+@login_required
+def create_user(request):
+    if request.method == "POST":
+        form = CreateUserForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.clean()
+            form.save()
+            return redirect('hodimlar:users')
+    else:
+        form = CreateUserForm()
+    return render(request, "createUser.html", {"form": form})

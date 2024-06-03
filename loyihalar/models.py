@@ -4,22 +4,6 @@ from django.db import models
 
 from hodimlar.models import User
 
-class Phase(models.Model):
-    phase_name = models.CharField(max_length=250)
-    phase_done_percentage = models.CharField(max_length=20, default=0)
-
-    def __str__(self):
-        return self.phase_name
-
-
-class Task(models.Model):
-    phase = models.ForeignKey(Phase, models.CASCADE)
-    task_name = models.CharField(max_length=250)
-    task_done_percentage = models.CharField(max_length=20, default=0)
-
-    def __str__(self):
-        return self.task_name
-
 
 class Project(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -32,17 +16,35 @@ class Project(models.Model):
     project_deadline = models.DateTimeField()
     project_budget = models.CharField(max_length=30)
     project_spent_money = models.CharField(max_length=30)
-    project_documents = models.FileField(upload_to='files/')
-    project_steps = models.ForeignKey(Phase, models.CASCADE)
-    step_tasks = models.ForeignKey(Task, models.CASCADE)
 
     def __str__(self):
         return self.project_name
 
 
-class Documents(models.Model):
+class Phase(models.Model):
     project = models.ForeignKey(Project, models.CASCADE)
-    document = models.FileField(upload_to='files')
+    phase_name = models.CharField(max_length=250)
+    phase_done_percentage = models.CharField(max_length=20, default=0)
 
     def __str__(self):
-        return self.document
+        return self.phase_name
+
+    def generate_id(self):
+        return uuid.uuid4()
+
+
+class Task(models.Model):
+    phase = models.ForeignKey(Phase, models.CASCADE)
+    task_name = models.CharField(max_length=250)
+    task_done_percentage = models.CharField(max_length=20, default=0)
+
+    def __str__(self):
+        return self.task_name
+
+
+class Documents(models.Model):
+    project = models.ForeignKey(Project, models.CASCADE)
+    document = models.FileField(upload_to='')
+
+    def __str__(self):
+        return self.project.project_name
