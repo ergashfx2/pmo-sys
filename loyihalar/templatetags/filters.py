@@ -29,6 +29,11 @@ def format_date(value):
     return value
 
 
+@register.filter()
+def to_int(value):
+    print(value)
+    return int(value)
+
 @register.simple_tag
 def generate_random(value):
     return f"{value}{uuid.uuid4()}"

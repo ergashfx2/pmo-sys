@@ -83,7 +83,7 @@
                                                             {% for task in data.tasks %}
                                                                 {% generate_random 'collapse' as random_id %}
                                                                         <div class="progress mb-3">
-                                                                            <div class="progress-bar {% if task.task_done_percentage == 100 %}bg-success{% elif task.task_done_percentage < 100 and task.task_done_percentage > 50 %}bg-warning {% else %}bg-primary{% endif %}"
+                                                                            <div class="progress-bar {% if task.task_done_percentage | to_int  == 100 %}bg-success{% elif task.task_done_percentage | to_int   < 100 and task.task_done_percentage | to_int  > 50 %}bg-warning {% else %}bg-primary{% endif %}"
                                                                                  role="progressbar" aria-valuenow="{{ task.task_done_percentage }}"
                                                                                  aria-valuemin="0"
                                                                                  aria-valuemax="100" style="width: {{ task.task_done_percentage }}%">
