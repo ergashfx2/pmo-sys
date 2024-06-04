@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, ListView, CreateView, View
 from .forms import UpdateUserForm, CreateUserForm
@@ -79,3 +80,24 @@ def create_user(request):
     else:
         form = CreateUserForm()
     return render(request, "createUser.html", {"form": form})
+
+
+@login_required
+def block_user(request, pk):
+    user = User.objects.get(pk=pk)
+    user.block()
+    return redirect('hodimlar:users')
+
+
+@login_required
+def unblock_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.unblock()
+    return redirect('hodimlar:users')
+
+
+@login_required
+def delete_user(request, pk):
+    user = User.objects.get(pk=pk)
+    user.delete()
+    return redirect('hodimlar:users')

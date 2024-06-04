@@ -29,10 +29,16 @@ def format_date(value):
     return value
 
 
-@register.filter()
+@register.filter
 def to_int(value):
-    print(value)
     return int(value)
+
+
+@register.filter
+def to_str(value):
+    print(value)
+    return str(value)
+
 
 @register.simple_tag
 def generate_random(value):

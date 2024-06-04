@@ -11,6 +11,8 @@ from hodimlar.models import *
 def home(request):
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
+        if user.status != 'Active':
+            return redirect('blocked-page')
         users = User.objects.all()
         labels = {}
         departments = Department.objects.all()
@@ -30,3 +32,8 @@ def home(request):
         return render(request, 'index.html', {'user': user, 'departments': len(departments), 'labels': labels_object,'users':users})
     else:
         return render(request, 'index.html')
+
+
+def blockedPage(request):
+    if request.user.is_authenticated:
+        return render(request,'blocked_page.html')

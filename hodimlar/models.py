@@ -28,7 +28,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=150)
     status = models.CharField(max_length=50, default='Active')
     phone = models.CharField(max_length=100)
-    avatar = models.ImageField(upload_to='images/', max_length=300,blank=True)
+    avatar = models.ImageField(upload_to='images/',default='human.jpg', max_length=300,blank=True)
     blog = models.CharField(max_length=200, blank=True)
     department = models.CharField(max_length=200,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,6 +41,14 @@ class User(AbstractUser):
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def block(self):
+        self.status = 'Blocked'
+        self.save()
+
+    def unblock(self):
+        self.status = 'Active'
+        self.save()
 
     def __str__(self):
         return self.username

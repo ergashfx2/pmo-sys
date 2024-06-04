@@ -8,17 +8,17 @@
                 <div class="row mt-3">
                     <label for="inputEmail3" class="col-1 col-form-label">Tanlang</label>
                     <div class="col-6">
-                        <select type="text" class="form-control" id="input">
+                        <select type="text" class="form-control" id="input-select">
                             <option>Hech nima tanlanmagan</option>
-                            <option>Batafsil</option>
-                            <option>Bloklash</option>
-                            <option>Blokdan ochish</option>
+                            <option id="detailed" name="batafsil">Batafsil</option>
+                            <option id="block" name="block">Bloklash</option>
+                            <option id="unblock" name="unblock">Blokdan ochish</option>
                         </select>
                     </div>
                     <div class="col-2">
-                        <button class="btn btn-danger" style="display: inline">Go</button>
+                        <button id="do-buton" class="btn btn-danger" style="display: inline">Go</button>
                         <i onclick="location.href = '{% url 'hodimlar:create-user' %}'" id="add-user" class="fa-solid fa-circle-plus btn btn-outline-dark" ></i>
-                        <i class="fa-solid fa-trash-can btn btn-outline-dark"></i>
+                        <i id="delete-button" class="fa-solid fa-trash-can btn btn-outline-dark"></i>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                                     <th scope="row">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value=""
-                                                   id="flexCheckDefault1"/>
+                                                   id="{{ user.id }}"/>
                                         </div>
                                     </th>
                                     <td>{{ forloop.counter }}</td>

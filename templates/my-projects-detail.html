@@ -73,9 +73,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             {% for data in datas %}
-                                                <div class="timeline">
-                                                    <div class="time-label">
-                                                        <span class="bg-red">{{ data.phase }} {{ data.phase_done_percentage }}%</span>
+                                                        <span class="bg-secondary d-block">{{ data.phase }} {{ data.phase_done_percentage }}%</span>
                                                     </div>
                                                     <div>
                                                         <div class="timeline-item">
@@ -100,9 +98,6 @@
                                                                 {% endwith %}
                                                             {% endfor %}
                                                         </div>
-                                                    </div>
-                                                </div>
-
                                             {% endfor %}
 
 
