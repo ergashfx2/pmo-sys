@@ -14,12 +14,60 @@ function getCookie(name) {
 }
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
     var select = document.getElementById('input-select');
     var array = []
     var button = document.getElementById('do-buton')
+    var confirm_delete = document.getElementById('confirm')
     var delete_button = document.getElementById('delete-button')
+    var all_delete_buttons = document.querySelectorAll('.delete-button')
+    var delButton = document.getElementById('del-confirm')
+    var selectedFiles = document.querySelectorAll('.del-files')
+    var delFiles = []
+    delButton.addEventListener('click',function (){
+
+        fetch('del-files',{
+            method : 'POST',
+            headers : {
+                'Content-type': 'application/json',
+                'X'
+
+            },
+            body : delFiles,
+
+        })
+
+        })
+
+        selectedFiles.forEach(file=>{
+            file.addEventListener('change',function (){
+                          if (file.checked === true) {
+                              delFiles.push(file.id)
+                          }
+                              if (file.checked === false){
+                                  delFiles = delFiles.filter(item => item !== file.id)
+                              }
+            })
+        })
+
+
+
+
+
+
+
+    all_delete_buttons.forEach(value => {
+        value.addEventListener('click', function () {
+            confirm_delete.addEventListener('click', function () {
+                fetch(`delete/${value.id}`).then(res=>{
+                    location.reload()
+                })
+
+            })
+        })
+    })
+
+
     document.querySelectorAll("input[type='checkbox']").forEach(value => {
         value.addEventListener('change', function () {
             if (value.checked === true) {
@@ -28,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         })
     })
+
 
     delete_button.addEventListener('click', function () {
         for (i = 0; i < array.length; i++) {

@@ -7,7 +7,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         {% for pr in project %}
-                           <h1> <strong>{{ pr.project_name }}</strong> - loyihasi haqida batafsil ma'lumot</h1>
+                            <h1><strong>{{ pr.project_name }}</strong> - loyihasi haqida batafsil ma'lumot</h1>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
@@ -20,17 +20,13 @@
         </section>
         <section class="content">
 
-            <div class="card">
+            <div class="card" style="height: 100dvh">
                 <div class="card-header">
                     <h3 class="card-title">Loyiha haqida</h3>
 
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <button class="btn btn-outline-dark">Faza qo'shish</button>
+                        <button class="btn btn-outline-dark">Task qo'shish</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -73,14 +69,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             {% for data in datas %}
-                                                        <span class="bg-secondary d-block">{{ data.phase }} {{ data.phase_done_percentage }}%</span>
-                                                    </div>
-                                                    <div>
-                                                        <div class="timeline-item">
-                                                            {% for task in data.tasks %}
-                                                                {% generate_random 'collapse' as random_id %}
-                                                                {% with task.task_done_percentage|to_int as percentage %}
-                                                                    <div class="progress-bar d-block mb-2
+                                                <span class="bg-secondary d-block">{{ data.phase }} {{ data.phase_done_percentage }}%</span>
+                                                </div>
+                                                <div>
+                                                <div class="timeline-item">
+                                                    {% for task in data.tasks %}
+                                                        {% generate_random 'collapse' as random_id %}
+                                                        {% with task.task_done_percentage|to_int as percentage %}
+                                                            <div class="progress-bar d-block mb-2
     {% if percentage == 100 %}
         bg-success
     {% elif percentage < 100 and percentage >= 50 %}
@@ -88,20 +84,20 @@
     {% elif percentage < 50 and percentage >= 0 %}
         bg-light
     {% endif %}"
-                                                                         role="progressbar"
-                                                                         aria-valuenow="{{ percentage }}"
-                                                                         aria-valuemin="0"
-                                                                         aria-valuemax="100"
-                                                                         style="width: 100%;height: 40px">
-                                                                        {{ task.task_name }} {{ percentage }}%
-                                                                    </div>
-                                                                {% endwith %}
-                                                            {% endfor %}
-                                                        </div>
+                                                                 role="progressbar"
+                                                                 aria-valuenow="{{ percentage }}"
+                                                                 aria-valuemin="0"
+                                                                 aria-valuemax="100"
+                                                                 style="width: {{ percentage }}%;">
+                                                                {{ task.task_name }} {{ percentage }}%
+                                                            </div>
+                                                        {% endwith %}
+                                                    {% endfor %}
+                                                </div>
                                             {% endfor %}
 
 
-                                        </div>
+                                            </div>
                                     </div>
 
                                 </div>
@@ -133,13 +129,82 @@
                                     </li>
                                 {% endfor %}
                             </ul>
+                            <div class="text-start mt-5 mb-3">
+                                <button data-toggle="modal" data-target="#addfile"  class="btn btn-sm btn-primary">Fayl yuklash</button>
+                                <button data-toggle="modal" data-target="#delete-file" class="btn btn-sm btn-danger">O'chirish</button>
+
+{#                                add file modal#}
+                                <div id="addfile" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1>Faylni yuklang</h1>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    {{ form.as_p }}
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Ha</button>
+                                                <button class="btn btn-primary" data-dismiss="modal">Bekor qilish</button>
+                                            </div>
+
+                                    </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+{#                                add file modal end#}
+
+{#                                delete file modal start#}
+
+                                                                <div id="delete-file" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1>Fayllarni tanlang</h1>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                    {% for document in documents %}
+                                                    <div class="row">
+                                                    <div class="col-1">
+                                                        <input class="del-files" type="checkbox" id="{{document.pk }}">
+                                                    </div>
+                                                    <div class="col">
+                                                        {{ document.document }}
+
+                                                    </div>
+                                                    </div>
+                                                    {% endfor %}
+                                            <div class="modal-footer">
+                                                <button id="del-confirm" type="button" class="btn btn-danger">O'chirish</button>
+                                                <button class="btn btn-primary" data-dismiss="modal">Bekor qilish</button>
+                                            </div>
+
+                                    </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+{#                                delete file modal end#}
+
+
+
+
+
+
+
+                        </div>
                     </div>
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
             </div>
         </section>
-        <!-- /.content -->
     </div>
 {% endblock content %}
