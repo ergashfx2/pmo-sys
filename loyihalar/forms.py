@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.forms import forms, ModelForm
 from loyihalar.models import Project,status_choices
-from .models import Documents
+from .models import Documents,Phase,Task
 from django import forms
 User = get_user_model()
 
@@ -33,3 +33,16 @@ class AddFileForm(forms.ModelForm):
     class Meta:
         model = Documents
         fields = ['document']
+
+
+class AddPhaseForm(forms.ModelForm):
+    class Meta:
+        model = Phase
+        fields = ['phase_name']
+
+class AddTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['task_name']
+
+
