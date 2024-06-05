@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import CreateView,DetailView,DeleteView,UpdateView
 
-from .forms import CreateProjectForm,EditProjectForm,AddFileForm
+from .forms import CreateProjectForm,EditProjectForm,AddFileForm,AddPhaseForm,AddTaskForm
 from .models import Project, Phase, Task, Documents
 
 @login_required
@@ -40,6 +40,8 @@ def get_project(request, pk):
 @login_required
 def DetailMyProjects(request,pk):
     form = AddFileForm
+    form2 = AddPhaseForm
+    form3 = AddTaskForm
     project = Project.objects.filter(pk=pk)
     datas = []
     phases = Phase.objects.filter(project_id=project[0].id)
@@ -69,7 +71,7 @@ def DetailMyProjects(request,pk):
 
 
     documents = Documents.objects.filter(project=project[0].id)
-    return render(request, 'my-projects-detail.html', context={'project': project, 'datas': datas, 'documents': documents,'form':form})
+    return render(request, 'my-projects-detail.html', context={'project': project, 'datas': datas, 'documents': documents,'form':form,'form2':form2,'form3':form3})
 
 @login_required
 def CreateProject(request):

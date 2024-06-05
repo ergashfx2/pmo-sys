@@ -25,7 +25,7 @@
                     <h3 class="card-title">Loyiha haqida</h3>
 
                     <div class="card-tools">
-                        <i data-toggle="modal" data-target="#addfile" class="fa-solid fa-circle-plus btn btn-outline-dark" ></i>
+                        <i data-toggle="modal" data-target="#add-phase" class="fa-solid fa-circle-plus btn btn-outline-dark" ></i>
                     </div>
                 </div>
                 <div class="card-body">
@@ -192,6 +192,29 @@
                             </div>
 
 {#                                delete file modal end#}
+
+                                                                                           <div id="add-phase" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1>Fayllarni tanlang</h1>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                    {{ form2.as_p }}
+                                                    {{ form3.as_p }}
+                                            <div class="modal-footer">
+                                                <button id="del-confirm" type="button" class="btn btn-danger">O'chirish</button>
+                                                <button class="btn btn-primary" data-dismiss="modal">Bekor qilish</button>
+                                            </div>
+
+                                    </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
 
 
 
