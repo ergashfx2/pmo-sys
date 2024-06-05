@@ -26,19 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var delFiles = []
     delButton.addEventListener('click',function (){
 
-        fetch('del-files',{
-            method : 'POST',
-            headers : {
-                'Content-type': 'application/json',
-                'X'
-
-            },
-            body : delFiles,
-
-        })
-
-        })
-
         selectedFiles.forEach(file=>{
             file.addEventListener('change',function (){
                           if (file.checked === true) {
