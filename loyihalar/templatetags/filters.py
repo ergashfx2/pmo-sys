@@ -43,3 +43,8 @@ def to_str(value):
 @register.simple_tag
 def generate_random(value):
     return f"{value}{uuid.uuid4()}"
+
+
+@register.filter
+def generate_random(value):
+    return f"{value}{uuid.uuid4()}"

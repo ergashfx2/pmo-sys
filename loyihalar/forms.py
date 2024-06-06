@@ -39,6 +39,7 @@ class AddPhaseForm(forms.ModelForm):
     class Meta:
         model = Phase
         fields = ['phase_name']
+        exclude = ['project']
 
 class AddTaskForm(forms.ModelForm):
     class Meta:

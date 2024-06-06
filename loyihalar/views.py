@@ -1,10 +1,15 @@
+import json
+import uuid
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import CreateView,DetailView,DeleteView,UpdateView
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 
-from .forms import CreateProjectForm,EditProjectForm,AddFileForm,AddPhaseForm,AddTaskForm
+from .forms import CreateProjectForm, EditProjectForm, AddFileForm, AddPhaseForm, AddTaskForm
+from .formsets import TaskFormSet
 from .models import Project, Phase, Task, Documents
+
 
 @login_required
 def all_projects(request):
@@ -14,11 +19,11 @@ def all_projects(request):
     return render(request, 'all_projects.html', context={'projects': projects, 'phases': phases, 'tasks': tasks})
 
 
-
 @login_required
 def myProjects(request):
     projects = Project.objects.filter(author=request.user.pk)
-    return render(request,'my-projects.html',context={'projects': projects})
+    return render(request, 'my-projects.html', context={'projects': projects})
+
 
 @login_required
 def get_project(request, pk):
@@ -29,49 +34,54 @@ def get_project(request, pk):
     for phase in phases:
         datas.append({
             'phase': phase.phase_name,
-            'phase_done_percentage' : int(phase.phase_done_percentage),
+            'phase_done_percentage': int(phase.phase_done_percentage),
             'tasks': Task.objects.filter(phase=phase.id)
         })
     documents = Documents.objects.filter(project=project[0].id)
     return render(request, 'project_detail.html', context={'project': project, 'datas': datas, 'documents': documents})
 
 
-
 @login_required
-def DetailMyProjects(request,pk):
-    form = AddFileForm
-    form2 = AddPhaseForm
-    form3 = AddTaskForm
+def DetailMyProjects(request, pk):
+    form = AddFileForm()
+    form2 = AddPhaseForm()
+    form3 = TaskFormSet()
     project = Project.objects.filter(pk=pk)
     datas = []
     phases = Phase.objects.filter(project_id=project[0].id)
     for phase in phases:
         datas.append({
             'phase': phase.phase_name,
-            'phase_done_percentage' : int(phase.phase_done_percentage),
+            'phase_id': phase.pk,
+            'phase_done_percentage': int(phase.phase_done_percentage),
             'tasks': Task.objects.filter(phase=phase.id)
         })
 
-     #saving document
+    #saving document
     if request.method == 'POST':
-        form = AddFileForm(data=request.POST,files=request.FILES)
+        form = AddFileForm(data=request.POST, files=request.FILES)
         if form.is_valid() and form.cleaned_data.get('document'):
             document = form.save(commit=False)
             document.project = Project.objects.get(pk=pk)
             document.save()
 
-        if form.is_valid() and form.cleaned_data.get('document'):
-            document = form.save(commit=False)
-            document.project = Project.objects.get(pk=pk)
-            document.save()
+        formPhase = AddPhaseForm(request.POST)
+        if formPhase.is_valid():
+            new_phase = formPhase.save(commit=False)
+            new_phase.project = project
+            new_phase.save()
+            task_formset = TaskFormSet(request.POST, instance=new_phase)
+            if task_formset.is_valid():
+                task_formset.save()
+        redirect('my-projects-detail',pk=pk)
 
     #end saving document
 
-
-
-
     documents = Documents.objects.filter(project=project[0].id)
-    return render(request, 'my-projects-detail.html', context={'project': project, 'datas': datas, 'documents': documents,'form':form,'form2':form2,'form3':form3})
+    return render(request, 'my-projects-detail.html',
+                  context={'project': project, 'datas': datas, 'documents': documents, 'form': form, 'form2': form2,
+                           'form3': form3})
+
 
 @login_required
 def CreateProject(request):
@@ -84,8 +94,7 @@ def CreateProject(request):
             project.save()
             return redirect('my-projects')
 
-
-    return render(request,'create_project.html',context={'form':form})
+    return render(request, 'create_project.html', context={'form': form})
 
 
 class UpdateProject(UpdateView):
@@ -98,7 +107,25 @@ class UpdateProject(UpdateView):
 
 
 @login_required
-def DeleteProject (request,pk):
+def DeleteProject(request, pk):
     project = Project.objects.filter(pk=pk)
     project.delete()
+    return redirect('my-projects')
+
+
+@login_required
+def add_phase(request,pk):
+    data = json.loads(request.body)
+    phase = Phase.objects.create(phase_name=data['phase_name'],project_id=pk)
+    for task in data['tasks']:
+        Task.objects.create(project_id=pk,phase_id=phase.id,task_name=task)
+    return render(request,template_name='my-projects-detail.html')
+
+
+@login_required
+def update_phase(request,pk):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        Phase.objects.filter(pk=pk).update(phase_name=data['phase_name'])
+        return redirect('my-projects')
     return redirect('my-projects')
