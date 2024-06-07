@@ -23,10 +23,9 @@ uzbek_month = {
 
 @register.filter
 def format_date(value):
-    if isinstance(value, datetime):
-        month = uzbek_month[value.month]
-        return f"{value.day}-{month} {value.year} yil"
-    return value
+    month = uzbek_month[value.month]
+    return f"{value.day}-{month} {value.year} yil"
+
 
 
 @register.filter

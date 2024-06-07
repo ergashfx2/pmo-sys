@@ -3,11 +3,12 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.contrib.auth import get_user_model
+from django.views.decorators.cache import cache_page
 
 User = get_user_model()
 from hodimlar.models import *
 
-
+@cache_page(60 * 15)
 def home(request):
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)

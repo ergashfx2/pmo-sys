@@ -36,12 +36,12 @@ class Phase(models.Model):
     phase_name = models.CharField(max_length=250)
     phase_done_percentage = models.CharField(max_length=20, default=0)
 
-    def update_project_done_percentage(self):
+    def update_phase_done_percentage(self):
         self.phase_done_percentage = str(self.phase_done_percentage)
         self.save()
 
 
-    def update_project_name(self):
+    def update_phase_name(self):
         self.phase_name = str(self.phase_name)
         self.save()
 
@@ -69,7 +69,11 @@ class Task(models.Model):
 
 class Documents(models.Model):
     project = models.ForeignKey(Project, models.CASCADE)
-    document = models.FileField(upload_to='')
+    document = models.FileField(upload_to='',blank=True)
+    url = models.CharField(max_length=200,blank=True)
+    type = models.CharField(max_length=150)
+    created_at = models.DateField(auto_now_add=True,editable=False)
+    update_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.project.project_name

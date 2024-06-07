@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Phase, Task, Project, Documents
 
+admin.site.register(Documents)
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -16,6 +17,3 @@ class PhaseAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['phase', 'task_name']
 
-@admin.register(Documents)
-class DocumentsAdmin(admin.ModelAdmin):
-    list_display = ['project','document']

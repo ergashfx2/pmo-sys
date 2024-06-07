@@ -13,7 +13,6 @@ function getCookie(name) {
     return cookieValue
 }
 
-
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('add-task').addEventListener('click', function () {
         var form = document.getElementById('phase-form')
@@ -33,16 +32,16 @@ document.addEventListener('DOMContentLoaded', function () {
         data['tasks'] = tasks
         var ref = window.location.href
         var token = getCookie('csrftoken')
-fetch(`${ref}/add-phase/`, {
-    method: "POST",
-    headers: {
-        "Content-type": "application/json",
-        "X-CSRFToken": token
-    },
-    body: JSON.stringify(data),
-}).then(res => {
-    location.reload()
-});
+        fetch(`${ref}/add-phase/`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "X-CSRFToken": token
+            },
+            body: JSON.stringify(data),
+        }).then(res => {
+            location.reload()
+        });
 
     })
 
@@ -94,8 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
 
 
-
-
         delete_button.addEventListener('click', function () {
             for (i = 0; i < array.length; i++) {
                 fetch(`delete-user/${array[i]}`).then(res => {
@@ -124,36 +121,179 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 })
 
-document.addEventListener('DOMContentLoaded',function (){
-    document.getElementById('icons-panel{{ data.phase_id }}')
-})
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('icon-buttons')) {
-            var phase_id = event.target.classList[3];
-            var element = document.getElementById('phase' + phase_id).textContent.toString()
-            document.getElementById('phase'+ phase_id).innerHTML = `<input type="text" value="${element}"/>`
-            document.getElementById('icons-panel' + phase_id ).innerHTML = `<i id="icon-save" class="fa-solid fa-circle-check btn btn-outline-secondary mt-1"></i>`
-        }
-
-    document.getElementById('icon-save').addEventListener('click',function (){
-        var new_input = document.getElementById('phase'+ phase_id).children.item(0).value
-                var token = getCookie('csrftoken')
-        fetch(`update-phase/${phase_id}`,{
-                method: "POST",
-    headers: {
-        "Content-type": "application/json",
-        "X-CSRFToken": token
-    },
-    body: JSON.stringify({'phase_name':new_input}),
-
-
-        }).then(res=>{
+document.addEventListener('DOMContentLoaded', function () {
+    var trash_id
+    document.querySelectorAll('.trash-icon').forEach(value => {
+        value.addEventListener('click', function () {
+            trash_id = value.id
+        })
+    })
+    document.getElementById('delete-icon-confirm').addEventListener('click', function () {
+        fetch(`/projects/my-projects/delete-phase/${trash_id}`).then(res => {
             location.reload()
         })
     })
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.chevron').forEach(value => {
+        var icon_class
+        value.addEventListener('click', function () {
+            if (!value.id) {
+                icon_class = document.getElementById('chevron' + value.classList[4]).classList
+                console.log(icon_class)
+            } else {
+                icon_class = document.getElementById(value.id).classList
+            }
+
+            if (icon_class[1] === 'fa-chevron-right') {
+                icon_class.replace('fa-chevron-right', "fa-chevron-down")
+            } else {
+                icon_class.replace('fa-chevron-down', "fa-chevron-right")
+            }
+        })
+    })
+})
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('icon-buttons')) {
+            var phase_id = event.target.classList[3];
+            var element = document.getElementById('phase' + phase_id).textContent.toString()
+            document.getElementById('phase' + phase_id).innerHTML = `<input type="text" value="${element}"/>`
+            document.getElementById('icons-panel' + phase_id).innerHTML = `<i id="icon-save" class="fa-solid fa-circle-check" style="color: green;cursor: pointer"></i>`
+        }
+
+        document.getElementById('icon-save').addEventListener('click', function () {
+            var new_input = document.getElementById('phase' + phase_id).children.item(0).value
+            var token = getCookie('csrftoken')
+            fetch(`update-phase/${phase_id}`, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                    "X-CSRFToken": token
+                },
+                body: JSON.stringify({'phase_name': new_input}),
+
+
+            }).then(res => {
+                location.reload()
+            })
+        })
+
+        document.addEventListener('keypress', function (event) {
+            var new_input = document.getElementById('phase' + phase_id).children.item(0).value
+            var token = getCookie('csrftoken')
+            if (event.key === 'Enter') {
+                fetch(`update-phase/${phase_id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "X-CSRFToken": token
+                    },
+                    body: JSON.stringify({'phase_name': new_input}),
+
+
+                }).then(res => {
+                    location.reload()
+                })
+            }
+
+        })
 
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    var task_id
+    var label
+    var label_text
+    document.querySelectorAll('.edit-task-icon').forEach(task => {
+        task.addEventListener('click', function () {
+            task_id = task.classList[3];
+            label = document.getElementById('label' + task_id)
+            label_text = document.getElementById('label' + task_id).innerText
+            label.innerHTML = `<input id="input${task_id}" type="text" value="${label_text}"/>`
+        })
+
+        document.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                var token = getCookie('csrftoken')
+                var new_value = document.getElementById('input' + task_id).value
+                fetch(`update-task/${task_id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "X-CSRFToken": token
+                    },
+                    body: JSON.stringify({'task_name': new_value}),
+
+
+                }).then(res => {
+                    location.reload()
+                })
+            }
+        })
+    })
+})
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    var taskId
+    document.querySelectorAll('.delete-task-icon ').forEach(task => {
+        task.addEventListener('click', function () {
+            taskId = task.id
+        })
+
+    })
+    document.getElementById('delete-task-confirm').addEventListener('click', function () {
+        fetch(`/projects/my-projects/delete-task/${taskId}`).then(res => {
+            location.reload()
+        })
+
+    })
+})
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    var t_id
+    document.querySelectorAll('.task-finish').forEach(value => {
+        value.addEventListener('click', function () {
+            t_id = value.classList[3]
+        })
+    })
+    var new_val
+    document.getElementById('task-done').addEventListener('change',function (e){
+        new_val = e.target.value
+    })
+    document.getElementById('finish-task-confirm').addEventListener('click', function () {
+        var token = getCookie('csrftoken')
+        fetch(`update-task-percentage/${t_id}`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "X-CSRFToken": token
+            },
+            body: JSON.stringify({'task_done_percentage': new_val}),
+
+
+        }).then(res => {
+            location.reload()
+        })
+    })
+
+})
+
+document.addEventListener('DOMContentLoaded',function (){
+    document.getElementById('url-input').style.display = 'none'
+    document.getElementById('add-url').addEventListener('click',function (){
+        document.getElementById('url-input').style.display = 'block'
+    })
+
+    var form = document.getElementById('add-file-form');
+    form.addEventListener('submit',function (){
+        window.location.replace('/projects/my-projects/detail/')
+    })
+
+})
