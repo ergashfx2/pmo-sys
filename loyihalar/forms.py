@@ -54,13 +54,6 @@ class AddFileForm(forms.ModelForm):
         model = Documents
         fields = ['url', 'document']
 
-    def save(self, commit=True):
-        doc = super().save(commit=False)
-        if self.cleaned_data.get('document'):
-            doc.document = self.cleaned_data['document']
-        if commit:
-            doc.save()
-
 
 
 class AddPhaseForm(forms.ModelForm):

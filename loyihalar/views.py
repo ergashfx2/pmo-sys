@@ -99,6 +99,7 @@ def DetailMyProjects(request, pk):
         if form.is_valid() and form.cleaned_data.get('document'):
             document = form.save(commit=False)
             doc_type = str(form.cleaned_data.get('document')).split('.')[-1]
+            document.document = form.cleaned_data.get('document')
             document.type = file_extensions[doc_type]
             document.project = Project.objects.get(pk=pk)
             document.save()
